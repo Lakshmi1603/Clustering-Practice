@@ -1,0 +1,61 @@
+setwd(C\Data Science with R\Assignments\Non Graded Assignments\Topic 6.1 Data Manipulation") fd<-read.csv("FlightDelays.csv") str(fd)  
+## 'data.frame':    2201 obs. of  13 variables:  
+##  $ schedtime   : int  1455 1640 1245 1715 1039 840 1240 1645 1715 2120 . ..  
+##  $ carrier     : Factor w/ 8 levels "CO","DH","DL",..: 5 2 2 2 2 2 2 2 2  2 ...  
+##  $ deptime     : int  1455 1640 1245 1709 1035 839 1243 1644 1710 2129 . ..  
+##  $ dest        : Factor w/ 3 levels "EWR","JFK","LGA": 2 2 3 3 3 2 2 2 2 2 ...  ##  $ distance    : int  184 213 229 229 229 228 228 228 228 228 ...  ##  $ date        : Factor w/ 31 levels "01-01-2004","01-02-2004",..: 1 1 1 1 1 1 1 1 1 1 ...  
+##  $ flightnumber: int  5935 6155 7208 7215 7792 7800 7806 7810 7812 7814 ...  
+##  $ origin      : Factor w/ 3 levels "BWI","DCA","IAD": 1 2 3 3 3 3 3 3 3 3 ...  ##  $ weather     : int  0 0 0 0 0 0 0 0 0 0 ...  ##  $ dayweek     : int  4 4 4 4 4 4 4 4 4 4 ...  ##  $ daymonth    : int  1 1 1 1 1 1 1 1 1 1 ...  ##  $ tailnu      : Factor w/ 549 levels "N10323","N10575",..: 526 263 382 350 385 374 241 227 246 372 ...  ##  $ delay       : Factor w/ 2 levels "delayed","ontime": 2 2 2 2 2 2 2 2 2 2 ...  
+library(dplyr)
+library(lubridate)
+library(readr)
+Flightdelays<-read_csv("C:/Data Science with R/Assignments/Non Graded Assignments/Topic 6.1 - Data Manipulation/FlightDelays.csv")
+view(Flightdelays)
+attach(Flightdelays) 
+
+head(fd$date)  
+## [1] 01-01-2004 01-01-2004 01-01-2004 01-01-2004 01-01-2004 01-01-2004  ## 31 Levels: 01-01-2004 01-02-2004 01-03-2004 01-04-2004 ... 1/31/2004  
+tail(fd$date)  
+   
+ 
+Looking at the first 6 and last 6 observations in the date column it is clear that the date is of the format mdy  
+Date column is converted into date format using the lubridate() library  
+fd$date<-mdy(fd$date)  
+Q1. Find out the number of delayed flights for all weekdays  
+ 
+obj1<-filter(fd,delay=="delayed") 
+obj2<filter(obj1,dayweek<6)
+ nrow(obj2)  
+## [1] 336  
+
+
+Q2 Find the average distance, total distance and count for all delayed flights on Friday  
+obj3<-filter(obj1, dayweek==5)
+## [1] 75  
+mean(obj3$distance)
+#Average distance = 210.28  
+sum(obj4$distance)
+#Total Distance = 15771  
+nrow(obj3)
+ 
+Q3 Find out how many flights were on time on Week days and Weekends (Consider  Saturday and Sunday as weekends)  
+
+obj4<-filter(Flightdelays,delay=="Ontime")
+obj5<-filter(obj4,dayweek<6)
+nrow(obj5) 
+## [1] 1362  
+
+obj6<-filter(obj4,dayweek>5)
+nrow(obj6)
+## [1] 411  
+ 
+Q4 Find out the number of flights for each destination across all weekdays  
+
+obj8<-filter(Flightdelays, dayweek<6)%>%group_by(dest)%>% summarise(n())
+view(obj8)
+
+Q5 Find out the number of times weather was bad across all weekdays. (1 indicates bad weather)  
+ 
+obj9<-filter(Flightdelays,dayweek<6)
+obj10<-filter(obj9, weather==1)%>%nrow()
+view(obj10)
